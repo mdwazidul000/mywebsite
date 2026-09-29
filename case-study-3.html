@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wazidul Islam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS Variables & Base Styles --- */
+        :root {
+            /* 1) Hero background variable at root */
+            --hero: #592720;
+
+            --bg-color: #FAF7F2; 
+            --text-color: #1A1A1A; 
+            --accent-color: #0F5C5C; 
+            --muted-color: #767676; 
+            --work-bg: #FDFCFA; 
+            --home-bg: #F6F3EE; 
+            
+            --bg: #F6F3EE;
+            --bg-card: #EDEAE3;
+            --ink: #141210;
+            --ink-secondary: #7A756F;
+            --ink-tertiary: #B5B0A8;
+            --accent: #1E3D2F;
+            --accent-warm: #C4A882;
+            --accent-light: #D6CCBD;
+            --white: #FDFCFA;
+            --red: #C0392B;
+            
+            /* Section 6.5 Hijack Background */
+            --hijack: #0B0B0B;
+
+            /* Untouched Next Case Study background */
+            --next-section: #EDE5D8;
+
+            /* 2) Unique section backgrounds */
+            --sec-meta-bg: #FAF7F2;
+            --sec-problem-bg: #F3EFEA;
+            --sec-brand-bg: #EAE5DC;
+            --sec-interaction-bg: #F7F4EF;
+            --sec-video-bg: #F2EBE1;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* --- Images, Videos & Iframes --- */
+        img, video, iframe {
+            border-radius: 4px;
+        }
+
+        /* --- Custom Cursor --- */
+        #cursor {
+            position: fixed; width: 10px; height: 10px; background: #3D6B4F;
+            border-radius: 50%; pointer-events: none; z-index: 10002;
+            transform: translate(-50%, -50%);
+            transition: width .25s, height .25s, background .25s, opacity .25s; mix-blend-mode: multiply;
+        }
+        #cursor-ring {
+            position: fixed; width: 36px; height: 36px; border: 1px solid #3D6B4F;
+            border-radius: 50%; pointer-events: none; z-index: 10001;
+            transform: translate(-50%, -50%);
+            transition: transform .12s ease-out, width .25s, height .25s, border-color .25s, border-width .25s; opacity: 0.5;
+        }
+        body:has(a:hover) #cursor, body:has(button:hover) #cursor, body:has(#cs-next:hover) #cursor, body:has(.zoom-host:hover) #cursor { width: 6px; height: 6px; background: #6A9E81; }
+        body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring, body:has(#cs-next:hover) #cursor-ring, body:has(.zoom-host:hover) #cursor-ring { width: 56px; height: 56px; opacity: 0.25; border-width: 2px; border-color: #6A9E81; }
+
+        body:active #cursor-ring {
+            width: 24px;
+            height: 24px;
+            border-color: var(--accent-color);
+            opacity: 0.8;
+        }
+
+        h1, h2, h3, p { margin: 0; }
+        a { text-decoration: none; color: inherit; display: block; cursor: none; } 
+        button { cursor: none; }
+
+        /* --- Global Typography --- */
+        .tagline { font-size: 4rem; line-height: 1.1; font-weight: 200; }
+        .tagline strong { font-weight: 700; color: var(--accent); }
+        .body-text { font-size: 1.25rem; line-height: 1.6; color: #4A4A4A; }
+        .scroll-text { font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted-color); }
+        .cs-title { font-size: 2.5rem; font-weight: 200; }
+        .cs-title strong { font-weight: 700; }
+        
+        /* --- Navigation --- */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 24px max(5%, calc((100vw - 1440px) / 2));
+            display: flex; justify-content: space-between; align-items: center;
+            box-sizing: border-box; z-index: 1000; transition: transform 0.4s ease, background 0.3s ease, padding 0.3s ease;
+            transform: translateY(0);
+        }
+        nav.nav-hidden {
+            transform: translateY(-100%);
+        }
+        nav.glass { background: rgba(250, 247, 242, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(26, 26, 26, 0.05); padding: 16px max(5%, calc((100vw - 1440px) / 2)); }
+        .nav-logo { font-weight: 700; font-size: 1.25rem; display: inline; color: var(--white); transition: color 0.3s ease; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { font-weight: 400; color: var(--white); transition: color 0.3s ease; display: inline-block; position: relative; }
+        nav.glass .nav-logo, nav.glass .nav-links a { color: var(--text-color); }
+        .nav-links a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent-color); transition: width 0.3s ease; }
+        .nav-links a:hover { color: var(--accent-color) !important; }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- Hero Section setup --- */
+        .hero-spacer {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            z-index: 1; 
+            pointer-events: none;
+        }
+        
+        .hero-fixed {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background: var(--hero);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .hero-title {
+            position: absolute;
+            top: 50%;
+            font-size: clamp(40px, 10vw, 150px);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+            white-space: nowrap;
+            margin: 0;
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        .hero-title.solid {
+            color: var(--white);
+            z-index: 1;
+            left: max(5%, calc((100vw - 1440px) / 2));
+            transform: translateY(-50%);
+        }
+
+        .hero-img-box {
+            position: relative;
+            z-index: 2;
+            width: 50vw;
+            max-width: 720px;
+            aspect-ratio: 16 / 11;
+            overflow: hidden;
+            will-change: transform;
+            box-shadow: 0 32px 84px rgba(0,0,0,0.3);
+        }
+
+        .hero-img-box img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transform: scale(1.08);
+            -webkit-user-drag: none;
+        }
+
+        .hero-text-mask {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0; 
+            will-change: transform;
+        }
+
+        .hero-title.stroked {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--white);
+            z-index: 2;
+            left: calc(-50vw + max(5%, calc((100vw - 1440px) / 2)));
+            transform: translateY(-50%);
+        }
+
+        .scroll-down-btn {
+            position: absolute;
+            right: max(5%, calc((100vw - 1440px) / 2));
+            bottom: 5%;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            z-index: 30;
+            cursor: none;
+            padding: 8px 12px;
+            pointer-events: auto;
+            transition: color 0.3s ease;
+        }
+
+        .scroll-down-btn svg {
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            stroke: currentColor;
+        }
+        
+        .scroll-down-btn .scroll-text { color: inherit; }
+
+        .scroll-down-btn:hover {
+            color: #FFFFFF;
+        }
+
+        .scroll-down-btn:hover svg {
+            transform: translateY(6px);
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 10;
+            background: var(--bg-color);
+            box-shadow: 0 -24px 64px rgba(0,0,0,0.1);
+        }
+
+        /* --- Sections & Case Study Layout --- */
+        section {
+            width: 100vw; box-sizing: border-box;
+            padding: 100px max(5%, calc((100vw - 1440px) / 2));
+            display: flex; flex-direction: column; position: relative; gap: 48px;
+        }
+
+        #cs-meta-section { background-color: var(--sec-meta-bg); }
+        #cs-problem { background-color: var(--sec-problem-bg); }
+        #cs-brand { background-color: var(--sec-brand-bg); }
+        #cs-interaction { background-color: var(--sec-interaction-bg); }
+        #cs-walkthrough { background-color: var(--sec-video-bg); }
+
+        .cs-header-text { max-width: 800px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 8px; }
+
+        #cs-meta {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+            padding-top: 60px; padding-bottom: 60px;
+            border-top: 1px solid rgba(26, 26, 26, 0.1); border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+        }
+        .meta-col { display: flex; flex-direction: column; gap: 8px; }
+
+        .cs-media { width: 100%; aspect-ratio: 16/9; object-fit: cover; -webkit-user-drag: none; }
+        .cs-video-block { background: var(--ink); }
+
+        .bento-grid {
+            display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+            gap: 24px; width: 100%; aspect-ratio: 16/9;
+        }
+        .bento-left { grid-column: 1 / 2; grid-row: 1 / 3; position: relative; overflow: hidden; }
+        .bento-right-top { grid-column: 2 / 3; grid-row: 1 / 2; position: relative; overflow: hidden; }
+        .bento-right-bottom { grid-column: 2 / 3; grid-row: 2 / 3; position: relative; overflow: hidden; }
+        .bento-img { width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
+
+        /* ========================================================
+           DECISION LOG CSS
+        ======================================================== */
+        .bg-ede5d8 { background-color: #EDE5D8; }
+        
+        .section-label {
+            font-size: 12px; font-weight: 500; letter-spacing: .22em;
+            text-transform: uppercase; color: var(--ink-tertiary);
+            margin-bottom: 16px; display: flex; align-items: center; gap: 16px;
+        }
+        .section-label::after { content: ''; flex: 1; max-width: 80px; height: 1px; background: var(--accent-light); }
+        
+        .dlog-header {
+            display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 40px;
+            padding-bottom: 16px; border-bottom: 1px solid var(--accent-light);
+            margin-bottom: 0;
+        }
+        .dlog-col-head {
+            font-size: 12px; font-weight: 600; letter-spacing: .22em;
+            text-transform: uppercase; color: var(--ink-tertiary);
+        }
+        .dlog-row {
+            display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 40px;
+            padding: 36px 0; border-top: 1px solid var(--accent-light); align-items: start;
+        }
+        .dlog-row:last-child { border-bottom: 1px solid var(--accent-light); }
+        .dlog-chose { font-size: 12px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+        .dlog-option { font-size: 16px; font-weight: 300; line-height: 1.5; color: var(--ink); }
+        .dlog-over { font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-tertiary); margin-bottom: 10px; }
+        .dlog-alt { font-size: 16px; font-weight: 300; line-height: 1.5; color: #C0392B; text-decoration: line-through; opacity: 0.75; }
+        .dlog-because { font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-tertiary); margin-bottom: 10px; }
+        .dlog-reason { font-size: 18px; font-weight: 300; line-height: 1.8; color: var(--ink-secondary); }
+
+        /* ========================================================
+           HIJACK GALLERY CSS
+        ======================================================== */
+        #cs-hijack-section {
+            padding: 0;
+            display: block; 
+            background-color: var(--hijack); 
+        }
+        
+        .hijack-container {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .hijack-track {
+            display: flex;
+            align-items: center;
+            gap: 4vw;
+            padding: 0 25vw; 
+            height: 70vh;
+            will-change: transform;
+        }
+        
+        .hijack-slide {
+            width: auto;
+            height: 100%;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+            background: transparent;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+        }
+        
+        .hijack-slide img {
+            width: auto;
+            height: 100%;
+            object-fit: contain;
+            -webkit-user-drag: none;
+        }
+
+        /* Section 8: Next Case Study */
+        #cs-next {
+            background-color: var(--next-section);
+            align-items: flex-start; 
+            text-align: left;
+            padding-top: 140px; padding-bottom: 140px; cursor: none; gap: 32px;
+        }
+        .next-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+        
+        .next-tagline-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .next-tagline {
+            position: relative;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        .next-tagline strong {
+            transition: color 0.3s ease;
+        }
+
+        .next-tagline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -6px;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .next-arrow-icon {
+            stroke: var(--text-color);
+            transition: transform 0.3s ease, stroke 0.3s ease;
+            display: block;
+        }
+
+        .next-img { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            object-fit: cover; 
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.25, 1); 
+            -webkit-user-drag: none;
+        }
+
+        #cs-next:hover .next-tagline,
+        #cs-next:hover .next-tagline strong {
+            color: var(--accent-color);
+        }
+
+        #cs-next:hover .next-tagline::after {
+            width: 100%;
+        }
+
+        #cs-next:hover .next-arrow-icon {
+            stroke: var(--accent-color);
+            transform: translateX(12px); 
+        }
+
+        #cs-next:hover .next-img { 
+            transform: scale(1.01); 
+        }
+
+        /* --- Section 3: Contact & Footer --- */
+        .contact {
+            background: var(--accent);
+            color: white;
+            padding: 120px max(5%, calc((100vw - 1440px) / 2));
+            display: block; 
+            text-align: center;
+        }
+        .contact-label {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 40px;
+        }
+        .contact-title {
+            font-size: clamp(40px, 6vw, 96px);
+            font-weight: 200; 
+            line-height: 1.05;
+            letter-spacing: -.04em;
+            margin-bottom: 48px;
+        }
+        .contact-title strong {
+            font-weight: 700;
+            display: block;
+        }
+        .contact-email {
+            font-size: clamp(18px, 2.5vw, 28px);
+            font-weight: 300;
+            letter-spacing: .02em;
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            display: inline-block;
+            border-bottom: 1px solid rgba(255,255,255,0.25);
+            padding-bottom: 4px;
+            transition: color .2s, border-color .2s;
+        }
+        .contact-email:hover { color: white; border-color: rgba(255,255,255,0.7); }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 56px;
+            padding-top: 48px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .contact-links a {
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.45);
+            text-decoration: none;
+            transition: color .2s;
+        }
+        .contact-links a:hover { color: rgba(255,255,255,0.85); }
+
+        /* Footer */
+        footer {
+            background: var(--accent);
+            padding: 24px max(5%, calc((100vw - 1440px) / 2));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        footer span {
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: .08em;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+        .reveal.in { opacity: 1; transform: translateY(0); }
+
+        /* ========================================================
+           LIGHTBOX & ZOOM INTERACTION STYLES
+        ======================================================== */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(246, 243, 238, 0.88); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .lightbox-img {
+            max-width: 85vw;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 0;
+            box-shadow: 0 32px 72px rgba(20, 18, 16, 0.12);
+            transform: scale(0.96);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+        .lightbox.active .lightbox-img {
+            transform: scale(1);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 32px;
+            right: 48px;
+            background: none;
+            border: none;
+            font-family: 'Lexend', sans-serif;
+            font-size: 36px;
+            font-weight: 200;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .lightbox-close:hover {
+            opacity: 0.5;
+        }
+
+        .zoom-lens {
+            position: absolute;
+            width: 107px; height: 67px;
+            border: 1.5px solid var(--accent-warm);
+            background: rgba(196, 168, 130, 0.07);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .15s;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        #zoom-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px; height: 200px;
+            border: 1px solid var(--accent-light);
+            background: var(--bg-color) no-repeat center / cover;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s, transform .2s;
+            transform: scale(.96);
+            z-index: 10005; /* High z-index to stay above header and custom cursor */
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        }
+        #zoom-panel.show { opacity: 1; transform: scale(1); }
+        .zoom-badge {
+            position: absolute; bottom: 10px; right: 12px;
+            font-family: 'Lexend', sans-serif; font-size: 10px; font-weight: 500;
+            letter-spacing: .14em; text-transform: uppercase;
+            color: var(--white); background: rgba(20,18,16,0.55);
+            padding: 3px 8px;
+        }
+
+        /* --- Responsive Tweaks --- */
+        @media (max-width: 768px) {
+            #cursor, #cursor-ring { display: none !important; }
+            #zoom-panel, .zoom-lens { display: none !important; }
+            body, a, button { cursor: auto !important; }
+            .tagline { font-size: 2.5rem; }
+            #cs-meta { grid-template-columns: 1fr; gap: 32px; }
+            .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; aspect-ratio: auto; }
+            .bento-left, .bento-right-top, .bento-right-bottom { grid-column: auto; grid-row: auto; aspect-ratio: 4/3; }
+            .hero-img-box { width: 85vw; }
+            .next-arrow-icon { width: 32px; height: 32px; }
+
+            /* Decision Log Mobile */
+            .dlog-header { display: none; }
+            .dlog-row { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
+
+            /* Adjust Hijack padding for mobile */
+            .hijack-track { padding: 0 15vw; gap: 6vw; height: 50vh; }
+            .hijack-slide { width: auto; }
+
+            .lightbox-close { top: 16px; right: 20px; font-size: 28px; }
+            .lightbox-img { max-width: 95vw; max-height: 85vh; }
+            
+            .contact { min-height: auto; padding: 80px max(5%, calc((100vw - 1440px) / 2)) 56px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <button class="lightbox-close" aria-label="Close modal">&times;</button>
+        <img src="" alt="" class="lightbox-img">
+    </div>
+
+    <!-- Zoom Magnifier Panel Fixed on Top Right -->
+    <div id="zoom-panel"><div class="zoom-badge">3×</div></div>
+
+    <nav id="navbar">
+        <a href="index.html" class="nav-logo">Wazidul Islam</a>
+        <div class="nav-links" id="nav-menu">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#work">Work</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+    </nav>
+
+    <!-- SECTION 1: HERO -->
+    <header class="hero-fixed">
+        <h1 class="hero-title solid"></h1>
+        
+        <div class="hero-img-box zoom-host" id="hero-img-box">
+            <img src="https://i.postimg.cc/C5SyMryG/Wireframe-11.avif" alt="Project visual" class="hero-img">
+            
+            <div class="hero-text-mask" id="hero-text-mask">
+                <h1 class="hero-title stroked"></h1>
+            </div>
+        </div>
+    
+        <a href="#cs-meta-section" class="scroll-down-btn" id="scroll-down-btn" aria-label="Scroll to explore">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 4v16"></path>
+                <path d="M18 14l-6 6-6-6"></path>
+            </svg>
+            <span class="scroll-text">Scroll to explore</span>
+        </a>
+    </header>
+    
+    <div class="hero-spacer"></div>
+
+    <main class="main-content">
+        <!-- Section 2: 3 Columns -->
+        <section id="cs-meta-section" style="padding-top: 100px; padding-bottom: 100px;">
+            <div id="cs-meta" class="reveal">
+                <div class="meta-col">
+                    <span class="scroll-text">Role</span>
+                    <p class="body-text">UX/UI Designer<br>(Solo project)</p>
+                </div>
+                <div class="meta-col">
+                    <span class="scroll-text">Timeline</span>
+                    <p class="body-text">10 days</p>
+                </div>
+                <div class="meta-col">
+                    <span class="scroll-text">Tools</span>
+                    <p class="body-text">Figma, Notion, Claude</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Problem -->
+        <section id="cs-problem">
+            <div class="cs-header-text reveal">
+                <div class="section-label reveal">Context</div>
+                <h2 class="cs-title"><strong>An early-stage startup needed a live site in three weeks,</strong> with no time for discovery.</h2>
+                <p class="body-text">This is a self-initiated case study. I set myself a real-world scenario: an early-stage AI writing startup needs its marketing site live in under three weeks, with no time for a long discovery phase and a small dev team ready to build the moment files are handed off. I designed and packaged the full project for handoff in 10 days, focused on one goal — get visitors to try Novelist, and get developers building without needing to ask me questions.</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Brand (Bento Grid) -->
+        <section id="cs-brand">
+            <div class="cs-header-text reveal">
+                <div class="section-label reveal">Style choices</div>
+                <h2 class="cs-title"><strong>I built the visual direction around one word: ink.</strong></h2>
+                <p class="body-text">Novelist needed to feel less like a SaaS dashboard and more like a writer's desk — warm, tactile, a little literary. I pulled the palette from paper and coffee: soft ivory (#F2ECE6, #F8F4E1) for backgrounds, a muted mocha (#AF8F6F) for secondary elements, and a deep espresso brown (#381E02) doing the heavy lifting for text and contrast. Five colors, each with a clear job — enough range to design with, few enough that no developer has to guess which brown is the "real" one.
+                <br> <br>For type, I paired Lora for headlines with Source Sans 3 for body and UI. Lora gives the site its literary voice in the moments that matter — hero lines, section headers — while Source Sans 3 keeps everything else fast to read and easy to build with, since it's a standard, widely-supported web font with clean weight steps (Regular, Medium, SemiBold). I kept the type scale small on purpose — two headline sizes, four body sizes — so it drops into a design system with almost no setup.
+                </p>
+            </div>
+            <div class="zoom-host" style="position:relative; width:100%;">
+                <img src="https://i.postimg.cc/1XsxR7h1/Wireframe-6.avif" alt="Project visual" class="cs-media reveal" style="height: auto; aspect-ratio: auto;">
+            </div>
+        </section>
+
+        <!-- Section 5: Interaction -->
+        <section id="cs-interaction">
+            <div class="cs-header-text reveal">
+                <div class="section-label reveal">Micro-interactions</div>
+                <h2 class="cs-title">Small interactions do a lot of the <strong>persuading</strong> on a marketing site, so I kept them purposeful — never more than what proves the point.</h2>
+                <p class="body-text"><strong>1. </strong>The headline types itself out letter by letter, cursor and all — then "nonjudgmental" gets a highlight sweep once the sentence lands. It's the first thing visitors see, so I wanted the page itself to demonstrate the product before any copy has to explain it.</p>
+            </div>
+            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1229156461?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Novelist 1"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+            <p class="body-text"><strong>2. </strong>The "How it works" features stay pinned while their content crossfades on scroll — Feature 03 into 04, into 05 — then the testimonial scrolls up and over it, covering the panel like the next page landing on top.</p>
+            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1229156459?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Novelist 2"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>                
+            <p class="body-text"><strong>3. </strong>Both the pricing tooltip and the FAQ answers open on hover and close on mouse-out — no clicks. Keeps browsing pricing details and questions a single continuous motion.</p>
+            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1229156463?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Novelist 3"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>        
+        </section>
+
+        <section id="cs-interaction">
+            <div class="cs-header-text reveal">
+                <div class="section-label reveal">Full Prototype</div>
+                <h2 class="cs-title">This is Novelist <strong>end to end</strong> </h2>
+                <p class="body-text"> — every section and interaction from the hero to the footer, built and sequenced the way a visitor would actually scroll through it.
+            </div>
+            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1229156462?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Novelist 4"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>        
+            </section>
+
+
+        <!-- ==========================================================
+             SECTION 6.5: HIJACKED HORIZONTAL SCROLL GALLERY
+             ========================================================== -->
+        <section id="cs-hijack-section">
+            <div class="cs-header-text" style="position: absolute; top: 10vh; left: max(5%, calc((100vw - 1440px) / 2)); z-index: 10;">
+            </div>
+            
+            <div class="hijack-container">
+                <div class="hijack-track">
+                    <div class="hijack-slide zoom-host">
+                        <img src="https://i.postimg.cc/V6jQ8QhD/Wireframe-10.avif" alt="Project visual">
+                    </div>
+                    <div class="hijack-slide zoom-host">
+                        <img src="https://i.postimg.cc/C5SyMryG/Wireframe-11.avif" alt="Project visual">
+                    </div>
+                    <div class="hijack-slide zoom-host">
+                        <img src="https://i.postimg.cc/5ybc9Kcw/Wireframe-9.avif" alt="Project visual">
+                    </div>
+                    <div class="hijack-slide zoom-host">
+                        <img src="https://i.postimg.cc/qq4fBDfK/Wireframe-12.avif" alt="Project visual">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Developer Handoff -->
+        <section id="cs-walkthrough">
+            <div class="cs-header-text reveal">
+            <div class="section-label reveal">Developer Handoff</div>
+                <h2 class="cs-title">I structured <strong>every style decision as a token</strong> before I touched the main screen</h2>
+                <p class="body-text">This structure lives directly in Figma's Variables panel, organized the way a developer would structure a theme file — so handoff isn't a separate document, it's already there. Every interactive component is annotated in full state range too: buttons in default, hover, pressed, and disabled; FAQ items open and collapsed. Nothing is left implied.</p>
+            </div>
+            <div class="zoom-host" style="position:relative; width:100%;">
+                <img src="https://i.postimg.cc/prRNVcNw/Wireframe-7.avif" alt="Project visual" class="cs-media reveal" style="height: auto; aspect-ratio: auto;">
+            </div>
+            <div class="zoom-host" style="position:relative; width:100%;">
+                <img src="https://i.postimg.cc/0jPg5XRR/Wireframe-8.avif" alt="Project visual" class="cs-media reveal" style="height: auto; aspect-ratio: auto;">
+            </div>
+            <div class="zoom-host" style="position:relative; width:100%;">
+                <img src="https://i.postimg.cc/VvRxJ913/Wireframe-5.avif" alt="Project visual" class="cs-media reveal" style="height: auto; aspect-ratio: auto;">
+            </div>
+        </section>
+
+        <!-- Section 8: Next case study -->
+        <section id="cs-next" onclick="window.location.href='case-study-1.html'">
+            <div class="next-wrap reveal">
+                <span class="scroll-text">Next case study</span>
+                <div class="next-tagline-container">
+                    <h1 class="tagline next-tagline">AI stylist app</h1>
+                    <svg class="next-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </div>
+            </div>
+            <img src="https://i.postimg.cc/Hx5Hk7rd/Wireframe-7.avif" alt="Project visual" class="cs-media next-img reveal">
+        </section>
+        
+        <!-- CONTACT -->
+        <section class="contact" id="contact">
+            <p class="contact-label reveal">Say hello</p>
+            <h2 class="contact-title reveal">
+                
+                <strong>Product collaborations</strong> or just exchanging ideas
+            </h2>
+            <a href="mailto:designer.wazidul@gmail.com" class="contact-email reveal">designer.wazidul@gmail.com</a>
+            <div class="contact-links reveal">
+                <a href="https://www.linkedin.com/in/designer-wazidul">LinkedIn</a>
+                <a href="https://www.behance.net/designer-wazidul">Behance</a>
+                <a href="https://github.com/designer-wazidul">Github ↗</a>
+            </div>
+        </section>
+
+        <footer>
+            <span>© Wazidul Islam</span>
+            <span></span>
+        </footer>
+    </main>
+
+    <!-- LOAD GSAP AND SCROLLTRIGGER PLUGINS FIRST -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        // Navbar hide on scroll down / show on scroll up logic
+        const navbar = document.getElementById('navbar');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > 50) {
+                navbar.classList.add('glass');
+            } else {
+                navbar.classList.remove('glass');
+            }
+
+            if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                navbar.classList.add('nav-hidden');
+            } else {
+                navbar.classList.remove('nav-hidden');
+            }
+
+            lastScrollY = currentScrollY;
+        });
+
+        // Cursor Animation Logic
+        const cursor = document.getElementById('cursor');
+        const ring = document.getElementById('cursor-ring');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        function animateCursor() {
+            if(cursor && ring) {
+                cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+                rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+                ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+            }
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Reveal-on-scroll observer
+        const revealEls = document.querySelectorAll('.reveal');
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if(e.isIntersecting) { 
+                    e.target.classList.add('in'); 
+                    io.unobserve(e.target); 
+                }
+            });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => io.observe(el));
+
+        // HERO SCROLL ROTATION LOGIC
+        const heroImgBox = document.getElementById('hero-img-box');
+        const heroTextMask = document.getElementById('hero-text-mask');
+        
+        function updateHeroScroll() {
+            const scrollY = window.scrollY;
+            const winH = window.innerHeight;
+            
+            if (scrollY <= winH) {
+                const progress = scrollY / winH;
+                const angle = progress * 12;
+                
+                if (heroImgBox && heroTextMask) {
+                    heroImgBox.style.transform = `rotate(${angle}deg)`;
+                    heroTextMask.style.transform = `rotate(${-angle}deg)`;
+                }
+            }
+        }
+        
+        window.addEventListener('scroll', updateHeroScroll);
+        updateHeroScroll();
+
+        // Scroll Down Button Click Listener
+        const scrollBtn = document.getElementById('scroll-down-btn');
+        if (scrollBtn) {
+            scrollBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetSection = document.getElementById('cs-meta-section');
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+
+        // ========================================================
+        // GSAP SCROLL HIJACK LOGIC
+        // ========================================================
+        gsap.registerPlugin(ScrollTrigger);
+
+        const hijackTrack = document.querySelector('.hijack-track');
+        const hijackContainer = document.querySelector('.hijack-container');
+
+        if(hijackTrack && hijackContainer) {
+            let getScrollAmount = () => hijackTrack.scrollWidth - window.innerWidth;
+            
+            gsap.to(hijackTrack, {
+                x: () => -getScrollAmount(),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: hijackContainer,
+                    pin: true,
+                    scrub: 1,
+                    start: "top top",
+                    end: () => "+=" + getScrollAmount(),
+                    invalidateOnRefresh: true
+                }
+            });
+        }
+
+        // ========================================================
+        // LIGHTBOX CLICK LOGIC
+        // ========================================================
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('.lightbox-img');
+        const lightboxClose = lightbox.querySelector('.lightbox-close');
+
+        document.querySelectorAll('.zoom-host img, .bento-img, .hijack-slide img, img.cs-media').forEach(img => {
+            img.addEventListener('dragstart', (e) => e.preventDefault());
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt || '';
+                lightbox.classList.add('active');
+            });
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg && e.target !== lightboxClose) {
+                lightbox.classList.remove('active');
+            }
+        });
+        
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        // ========================================================
+        // FIXED TOP-RIGHT ZOOM HOVER INTERACTION
+        // ========================================================
+        (function () {
+            const ZOOM = 3;
+            const PW = 320, PH = 200;
+            const LENS_HX = 54;
+            const LENS_HY = 34;
+
+            const zp = document.getElementById('zoom-panel');
+            const hosts = Array.from(document.querySelectorAll('.zoom-host'));
+
+            hosts.forEach(host => {
+                if (!host.querySelector('.zoom-lens')) {
+                    const l = document.createElement('div');
+                    l.className = 'zoom-lens';
+                    host.appendChild(l);
+                }
+                const lens = host.querySelector('.zoom-lens');
+                const img  = host.querySelector('img');
+                if (!img) return;
+
+                host.addEventListener('mouseenter', () => {
+                    zp.style.backgroundImage = `url(${img.src})`;
+                    lens.style.opacity = '1';
+                    zp.classList.add('show');
+                });
+
+                host.addEventListener('mouseleave', () => {
+                    lens.style.opacity = '0';
+                    zp.classList.remove('show');
+                });
+
+                host.addEventListener('mousemove', e => {
+                    const rect = host.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const lx = Math.max(LENS_HX, Math.min(rect.width  - LENS_HX, x));
+                    const ly = Math.max(LENS_HY, Math.min(rect.height - LENS_HY, y));
+                    lens.style.left = lx + 'px';
+                    lens.style.top  = ly + 'px';
+
+                    const bsW = rect.width  * ZOOM;
+                    const bsH = rect.height * ZOOM;
+                    const bgX = -(lx * ZOOM - PW / 2);
+                    const bgY = -(ly * ZOOM - PH / 2);
+                    zp.style.backgroundSize     = `${bsW}px ${bsH}px`;
+                    zp.style.backgroundPosition = `${bgX}px ${bgY}px`;
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
